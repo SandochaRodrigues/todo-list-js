@@ -10,6 +10,11 @@ function saveTasks() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
+// Recupera uma tarefa pelo seu ID
+function getTaskById(id) {
+  return tasks.find(task => task.id === id);
+}
+
 //Editar a tarefa
 function editTask(id) {
   const task = getTaskById(id);
@@ -69,7 +74,6 @@ function renderTasks(filter = "all") {
 
     const editBtn = document.createElement("button");
     editBtn.textContent = "✏️";
-
     editBtn.addEventListener("click", (e) => {
       e.stopPropagation();
 
