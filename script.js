@@ -68,6 +68,7 @@ function renderTasks(filter = "all") {
     });
 
     li.appendChild(delBtn);
+    li.appendChild(editBtn.cloneNode(true)); // Adiciona botão de editar
     taskList.appendChild(li);
   });
 }
@@ -106,6 +107,7 @@ editBtn.addEventListener("click", (e) => {
   if (!taskId) return;
   editTask(taskId);
 });
+
 
 // Render inicial ao carregar o script
 renderTasks();
