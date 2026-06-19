@@ -1,3 +1,4 @@
+// ...existing code...
 const taskInput = document.getElementById("task-input");
 const addBtn = document.getElementById("add-btn");
 const taskList = document.getElementById("task-list");
@@ -16,17 +17,21 @@ function getTaskById(id) {
   return tasks.find(task => task.id === id);
 }
 
-//Editar a tarefa
+//Editar a tarefa via prompt (mantém verificação de existência)
 function editTask(id) {
   const task = getTaskById(id);
+  if (!task) return;
 
   const newText = prompt("Editar tarefa:", task.text);
-
-  if (newText !== null && newText.trim() !== "") {
-    task.text = newText.trim();
-    saveTasks();
+  if (newText !== null) {
+    const trimmed = newText.trim();
+    if (trimmed !== "") {
+      task.text = trimmed;
+      saveTasks();
+      renderTasks();
+    }
   }
-} 
+}
 
 // Renderiza a lista de tarefas no DOM, com filtro opcional:
 // filter = "all" | "completed" | "incomplete"
@@ -45,11 +50,11 @@ function renderTasks(filter = "all") {
   filtered.forEach(task => {
     const li = document.createElement("li");
     li.className = "task-item";
-    
+
     const textContainer = document.createElement("div");
     textContainer.className = "task-text";
-    
-    // Define texto e classe visual para tarefa concluída
+
+    // Define texto e campo de edição inline
     if (editingTaskId === task.id) {
       const input = document.createElement("input");
       input.className = "edit-input";
@@ -57,22 +62,26 @@ function renderTasks(filter = "all") {
 
       input.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
-          task.text = input.value.trim();
+          const val = input.value.trim();
+          if (val !== "") task.text = val;
           editingTaskId = null;
           saveTasks();
+          renderTasks(filter);
+        } else if (e.key === "Escape") {
+          editingTaskId = null;
           renderTasks(filter);
         }
       });
 
       input.addEventListener("blur", () => {
-        task.text = input.value.trim();
+        const val = input.value.trim();
+        if (val !== "") task.text = val;
         editingTaskId = null;
         saveTasks();
         renderTasks(filter);
       });
 
       textContainer.appendChild(input);
-
       setTimeout(() => input.focus(), 0);
 
     } else {
@@ -85,12 +94,17 @@ function renderTasks(filter = "all") {
 
       textContainer.appendChild(span);
     }
+
     li.appendChild(textContainer);
-    li.className = task.completed ? "completed" : "";
+    // Mantém a classe base e adiciona/remove a classe 'completed'
+    li.classList.toggle("completed", task.completed);
 
     // Clique no item alterna o estado "completed"
-    li.addEventListener("click", () => {
-      const originalTask = tasks.find(t => t.id === task.id);
+    li.addEventListener("click", (e) => {
+      // Não alternar quando o clique veio de um botão ou do input de edição
+      if (e.target.closest("button") || e.target.tagName === "INPUT") return;
+
+      const originalTask = getTaskById(task.id);
       if (!originalTask) return;
       originalTask.completed = !originalTask.completed;
 
@@ -100,6 +114,7 @@ function renderTasks(filter = "all") {
 
     // Botão de eliminar (ico de lata do lixo)
     const delBtn = document.createElement("button");
+    delBtn.type = "button";
     delBtn.textContent = "🗑️";
 
     // Evita que o clique no botão propague para o <li>
@@ -114,6 +129,7 @@ function renderTasks(filter = "all") {
     });
 
     const editBtn = document.createElement("button");
+    editBtn.type = "button";
     editBtn.textContent = "✏️";
     editBtn.addEventListener("click", (e) => {
       e.stopPropagation();
