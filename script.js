@@ -67,6 +67,16 @@ function renderTasks(filter = "all") {
       renderTasks(filter);
     });
 
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "✏️";
+
+    editBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      editTask(task.id);
+      renderTasks(filter);
+    });
+
     li.appendChild(delBtn);
     li.appendChild(editBtn); // Adiciona botão de editar
     taskList.appendChild(li);
@@ -96,17 +106,6 @@ filterButtons.forEach(btn => {
     renderTasks(btn.dataset.filter);
   });
 });
-
-const editBtn = document.createElement("button");
-editBtn.textContent = "✏️";
-
-editBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-
-  editTask(task.id);
-  renderTasks(filter);
-});
-
 
 // Render inicial ao carregar o script
 renderTasks();
