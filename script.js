@@ -18,7 +18,7 @@ function getTaskById(id) {
 }
 
 //Editar a tarefa via prompt (mantém verificação de existência)
-function editTask(id) {
+/*function editTask(id) {
   const task = getTaskById(id);
   if (!task) return;
 
@@ -31,7 +31,7 @@ function editTask(id) {
       renderTasks();
     }
   }
-}
+}*/
 
 // Renderiza a lista de tarefas no DOM, com filtro opcional:
 // filter = "all" | "completed" | "incomplete"
@@ -137,8 +137,13 @@ function renderTasks(filter = "all") {
       renderTasks(filter);
     });
 
-    li.appendChild(delBtn);
-    li.appendChild(editBtn); // Adiciona botão de editar
+    const actions = document.createElement("div");
+    actions.className = "task-actions";
+
+    actions.appendChild(editBtn);
+    actions.appendChild(delBtn);
+
+    li.appendChild(actions);
     taskList.appendChild(li);
   });
 }
