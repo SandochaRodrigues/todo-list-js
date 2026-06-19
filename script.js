@@ -4,6 +4,7 @@ const taskList = document.getElementById("task-list");
 const filterButtons = document.querySelectorAll(".filters button");
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let editingTaskId = null;
 
 // Guarda a lista de tarefas no localStorage
 function saveTasks() {
@@ -44,7 +45,36 @@ function renderTasks(filter = "all") {
   filtered.forEach(task => {
     const li = document.createElement("li");
     // Define texto e classe visual para tarefa concluída
-    li.textContent = task.text;
+    if (editingTaskId === task.id) {
+  const input = document.createElement("input");
+  input.value = task.text;
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      task.text = input.value.trim();
+      editingTaskId = null;
+      saveTasks();
+      renderTasks(filter);
+    }
+  });
+
+  input.addEventListener("blur", () => {
+    task.text = input.value.trim();
+    editingTaskId = null;
+    saveTasks();
+    renderTasks(filter);
+  });
+
+  li.appendChild(input);
+
+  setTimeout(() => input.focus(), 0);
+
+} else {
+  const span = document.createElement("span");
+  span.textContent = task.text;
+
+  li.appendChild(span);
+}
     li.className = task.completed ? "completed" : "";
 
     // Clique no item alterna o estado "completed"
@@ -76,8 +106,7 @@ function renderTasks(filter = "all") {
     editBtn.textContent = "✏️";
     editBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-
-      editTask(task.id);
+      editingTaskId = task.id;
       renderTasks(filter);
     });
 
