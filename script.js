@@ -68,7 +68,7 @@ function renderTasks(filter = "all") {
     });
 
     li.appendChild(delBtn);
-    li.appendChild(editBtn.cloneNode(true)); // Adiciona botão de editar
+    li.appendChild(editBtn); // Adiciona botão de editar
     taskList.appendChild(li);
   });
 }
@@ -99,13 +99,12 @@ filterButtons.forEach(btn => {
 
 const editBtn = document.createElement("button");
 editBtn.textContent = "✏️";
+
 editBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  const li = e.target.closest("li");
-  if (!li) return;
-  const taskId = tasks.find(t => t.id === li.dataset.id);
-  if (!taskId) return;
-  editTask(taskId);
+
+  editTask(task.id);
+  renderTasks(filter);
 });
 
 
