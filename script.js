@@ -10,6 +10,18 @@ function saveTasks() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
+//Editar a tarefa
+function editTask(id) {
+  const task = getTaskById(id);
+
+  const newText = prompt("Editar tarefa:", task.text);
+
+  if (newText !== null && newText.trim() !== "") {
+    task.text = newText.trim();
+    saveTasks();
+  }
+} 
+
 // Renderiza a lista de tarefas no DOM, com filtro opcional:
 // filter = "all" | "completed" | "incomplete"
 function renderTasks(filter = "all") {
@@ -82,6 +94,17 @@ filterButtons.forEach(btn => {
   btn.addEventListener("click", () => {
     renderTasks(btn.dataset.filter);
   });
+});
+
+const editBtn = document.createElement("button");
+editBtn.textContent = "✏️";
+editBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  const li = e.target.closest("li");
+  if (!li) return;
+  const taskId = tasks.find(t => t.id === li.dataset.id);
+  if (!taskId) return;
+  editTask(taskId);
 });
 
 // Render inicial ao carregar o script

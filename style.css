@@ -29,6 +29,13 @@ button {
   cursor: pointer;
 }
 
+li button {
+  margin-left: 5px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
 ul {
   list-style: none;
   padding: 0;
