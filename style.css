@@ -50,3 +50,45 @@ li.completed {
   text-decoration: line-through;
   color: gray;
 }
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  transition: 0.2s;
+}
+
+.task-item:hover {
+  background: rgba(0,0,0,0.05);
+  border-radius: 8px;
+}
+
+.task-text {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.task-actions {
+  display: flex;
+  gap: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+
+.task-item:hover .task-actions {
+  opacity: 1;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.completed-text {
+  text-decoration: line-through;
+  opacity: 0.6;
+}

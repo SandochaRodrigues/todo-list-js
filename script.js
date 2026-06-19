@@ -44,37 +44,48 @@ function renderTasks(filter = "all") {
   // Cria elementos <li> para cada tarefa filtrada
   filtered.forEach(task => {
     const li = document.createElement("li");
+    li.className = "task-item";
+    
+    const textContainer = document.createElement("div");
+    textContainer.className = "task-text";
+    
     // Define texto e classe visual para tarefa concluída
     if (editingTaskId === task.id) {
-  const input = document.createElement("input");
-  input.value = task.text;
+      const input = document.createElement("input");
+      input.className = "edit-input";
+      input.value = task.text;
 
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      task.text = input.value.trim();
-      editingTaskId = null;
-      saveTasks();
-      renderTasks(filter);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          task.text = input.value.trim();
+          editingTaskId = null;
+          saveTasks();
+          renderTasks(filter);
+        }
+      });
+
+      input.addEventListener("blur", () => {
+        task.text = input.value.trim();
+        editingTaskId = null;
+        saveTasks();
+        renderTasks(filter);
+      });
+
+      textContainer.appendChild(input);
+
+      setTimeout(() => input.focus(), 0);
+
+    } else {
+      const span = document.createElement("span");
+      span.textContent = task.text;
+
+      if (task.completed) {
+        span.classList.add("completed-text");
+      }
+
+      textContainer.appendChild(span);
     }
-  });
-
-  input.addEventListener("blur", () => {
-    task.text = input.value.trim();
-    editingTaskId = null;
-    saveTasks();
-    renderTasks(filter);
-  });
-
-  li.appendChild(input);
-
-  setTimeout(() => input.focus(), 0);
-
-} else {
-  const span = document.createElement("span");
-  span.textContent = task.text;
-
-  li.appendChild(span);
-}
+    li.appendChild(textContainer);
     li.className = task.completed ? "completed" : "";
 
     // Clique no item alterna o estado "completed"
